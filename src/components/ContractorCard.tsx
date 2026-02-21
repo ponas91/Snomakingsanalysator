@@ -76,11 +76,11 @@ function ContractorForm({
       
       <div>
         <label className="block text-sm text-slate-400 mb-1">Telefon *</label>
-        <div className="flex gap-2">
+        <div className="flex gap-2 w-full">
           <select
             value={countryCode}
             onChange={(e) => setCountryCode(e.target.value)}
-            className="px-2 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="px-2 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shrink-0"
           >
             {countryCodes.map((cc) => (
               <option key={cc.code} value={cc.code}>{cc.code}</option>
@@ -92,7 +92,7 @@ function ContractorForm({
             pattern="[0-9]*"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value.replace(/[^0-9]/g, ''))}
-            className="flex-1 px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="flex-1 min-w-0 px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             placeholder="12345678"
           />
         </div>
