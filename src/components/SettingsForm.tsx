@@ -285,12 +285,19 @@ export function SettingsForm() {
         </button>
 
         {isInstallable && (
-          <button
-            onClick={handleInstall}
-            className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-          >
-            📲 Last ned appen
-          </button>
+          <div className="border-t border-slate-700 pt-4">
+            <h3 className="font-medium text-slate-300 mb-3">Installer appen</h3>
+            <p className="text-xs text-slate-500 mb-3">
+              Installer appen på enheten din for raskere tilgang og bedre opplevelse.
+            </p>
+            <button
+              onClick={handleInstall}
+              className="w-full px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+            >
+              <span>📲</span>
+              <span>Installer på {/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'enhet' : 'skrivebord'}</span>
+            </button>
+          </div>
         )}
 
         <div className="border-t border-slate-700 pt-4">

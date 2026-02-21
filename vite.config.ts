@@ -9,7 +9,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['pwa-192x192.svg'],
+      includeAssets: ['pwa-192x192.svg', 'pwa-512x512.svg'],
       manifest: {
         name: 'Snømåkingsanalysator',
         short_name: 'Snømåker',
@@ -18,6 +18,8 @@ export default defineConfig({
         background_color: '#1e293b',
         display: 'standalone',
         orientation: 'portrait',
+        start_url: '/',
+        scope: '/',
         icons: [
           {
             src: 'pwa-192x192.svg',
@@ -25,10 +27,22 @@ export default defineConfig({
             type: 'image/svg+xml'
           },
           {
-            src: 'pwa-192x192.svg',
+            src: 'pwa-512x512.svg',
             sizes: '512x512',
             type: 'image/svg+xml',
             purpose: 'any maskable'
+          },
+          {
+            src: 'pwa-192x192.svg',
+            sizes: '192x192',
+            type: 'image/svg+xml',
+            purpose: 'maskable'
+          },
+          {
+            src: 'pwa-512x512.svg',
+            sizes: '512x512',
+            type: 'image/svg+xml',
+            purpose: 'maskable'
           }
         ]
       }
