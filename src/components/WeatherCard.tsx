@@ -63,6 +63,11 @@ export function WeatherCard() {
         </div>
       )}
 
+      <div className="flex items-center gap-2 mb-4 text-sm text-slate-400">
+        <span>📍</span>
+        <span>{state.settings.location.name}</span>
+      </div>
+
       {weather ? (
         <div className="grid grid-cols-3 gap-4">
           <div className="text-center">

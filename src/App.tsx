@@ -12,12 +12,10 @@
  * - Innstillinger (settings): App-innstillinger
  * 
  * @see AppProvider - Global state i context/AppContext.tsx
- * @see useApp - Hook for å bruke global state
  */
 
 import { useState } from 'react';
 import { AppProvider } from './context/AppContext';
-import { useApp } from './hooks/useApp';
 import { VERSION, BUILD_DATE } from './lib/version';
 import { WeatherCard } from './components/WeatherCard';
 import { ForecastChart } from './components/ForecastChart';
@@ -50,9 +48,6 @@ type Tab = 'home' | 'history' | 'settings' | 'contractor';
 function AppContent() {
   // Aktivt fan-valg (state)
   const [activeTab, setActiveTab] = useState<Tab>('home');
-  
-  // Hent global state (innstillinger, vær, etc.)
-  const { state } = useApp();
   
   // PWA oppdaterings-håndtering
   const { updateAvailable, updateApp } = usePWAAutoUpdate();
@@ -96,22 +91,14 @@ function AppContent() {
       {/**
        * Header
        * 
-       * Sticky header som:
-       * - Alltid er synlig øverst
-       * - Viser app-tittel og lokasjon
-       * - Inneholder link til Met.no
+       * Viser:
+       * - App-tittel
+       * - Kreditering til Met.no
        */}
-      <header className="bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800 shadow-md sticky top-0 z-10">
+      <header className="bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800 shadow-md z-10">
         <div className="max-w-2xl mx-auto px-4 py-4">
           {/* App-tittel */}
           <h1 className="text-2xl font-extrabold text-white">❄️ Snømåkingsanalysator</h1>
-          
-          {/* Lokasjon */}
-          <div className="flex items-center gap-2 mt-1">
-            <span className="text-blue-400">📍</span>
-            {/* Hent lokasjon fra global state */}
-            <span className="text-sm font-medium text-slate-400">{state.settings.location.name}</span>
-          </div>
           
           {/* Kreditering til Met.no */}
           <a 
