@@ -74,7 +74,7 @@ export function ForecastChart() {
                 }
                 return [value, name];
               }}
-              labelFormatter={(label) => `Kl. ${label}`}
+              labelFormatter={(label) => `Kl ${label}`}
             />
             <Bar 
               dataKey="snow" 
