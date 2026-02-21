@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApp } from '../hooks/useApp';
 import type { SnowEntry } from '../types';
 
@@ -152,12 +152,24 @@ export function EditEntryModal({
 }
 
 export function AddEntryModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const { dispatch } = useApp();
-  const [snowDepth, setSnowDepth] = useState('');
+  const { state, dispatch } = useApp();
+  const currentSnow = state.weather?.current?.snow;
+  
+  const getInitialSnowDepth = () => {
+    return currentSnow !== undefined && currentSnow > 0 ? currentSnow.toString() : '';
+  };
+  
+  const [snowDepth, setSnowDepth] = useState(getInitialSnowDepth);
   const [comment, setComment] = useState('');
   const [contractor, setContractor] = useState('');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
+
+  useEffect(() => {
+    if (isOpen) {
+      setSnowDepth(getInitialSnowDepth());
+    }
+  }, [isOpen, currentSnow]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
