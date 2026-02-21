@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useApp } from '../hooks/useApp';
 import type { SnowEntry } from '../types';
-import { calculateSnowInPeriod } from '../services/metno';
 
 export function EditEntryModal({ 
   isOpen, 
@@ -157,8 +156,12 @@ export function AddEntryModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
   
   const getInitialSnowDepth = () => {
     if (!state.weather) return '';
-    const snow24h = calculateSnowInPeriod(state.weather.hourly, 24);
-    return snow24h > 0 ? snow24h.toString() : '';
+    const temp = state.weather.current.temperature;
+    const precip = state.weather.current.precipitation;
+    if (temp < 2 && precip > 0) {
+      return precip.toString();
+    }
+    return '';
   };
   
   const [snowDepth, setSnowDepth] = useState(getInitialSnowDepth);
