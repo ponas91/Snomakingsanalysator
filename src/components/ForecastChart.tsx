@@ -68,8 +68,8 @@ export function ForecastChart() {
                     ? 'Nedbør'
                     : getWeatherConditionLabel(props.payload.weatherCondition);
                   return [
-                    `${icon} ${Number(value).toFixed(1)} mm` + '\n' + `🌡️ ${props.payload.temperature}°C`,
-                    label
+                    `${label}` + '\n' + `${icon} ${Number(value).toFixed(1)} mm` + '\n' + `🌡️ ${props.payload.temperature}°C`,
+                    ''
                   ];
                 }
                 return [value, name];
