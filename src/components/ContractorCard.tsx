@@ -148,6 +148,10 @@ function ContractorItem({
     window.location.href = `sms:${contractor.phone}`;
   };
 
+  const handleEmail = () => {
+    window.location.href = `mailto:${contractor.email}`;
+  };
+
   return (
     <div className={`bg-slate-700 rounded-lg p-4 ${contractor.isPrimary ? 'ring-2 ring-blue-500' : ''}`}>
       <div className="flex justify-between items-start mb-2">
@@ -203,6 +207,14 @@ function ContractorItem({
         >
           💬 SMS
         </button>
+        {contractor.email && (
+          <button
+            onClick={handleEmail}
+            className="flex-1 px-3 py-1.5 bg-slate-600 text-white text-sm rounded-lg hover:bg-slate-500"
+          >
+            ✉️ E-post
+          </button>
+        )}
       </div>
     </div>
   );
