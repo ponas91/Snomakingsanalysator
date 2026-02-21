@@ -34,28 +34,28 @@ export function ForecastChart() {
   }
 
   return (
-    <div className="bg-[#3B4252] rounded-xl shadow-md p-6">
-      <h2 className="text-lg font-semibold text-[#ECEFF4] border-b border-[#4C566A] pb-3 mb-4">Snøprognose (24 timer)</h2>
+    <div className="bg-slate-900 rounded-xl shadow-md p-6">
+      <h2 className="text-lg font-semibold text-white border-b border-slate-700 pb-3 mb-4">Snøprognose (24 timer)</h2>
       
       <div className="h-48 w-full">
         <ResponsiveContainer width="100%" height={192}>
           <BarChart data={chartData} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
             <XAxis 
               dataKey="time" 
-              tick={{ fontSize: 10, fill: '#D8DEE9' }}
+              tick={{ fontSize: 10, fill: '#94a3b8' }}
               interval={3}
             />
             <YAxis 
-              tick={{ fontSize: 10, fill: '#D8DEE9' }}
-              label={{ value: 'mm', angle: -90, position: 'insideLeft', fontSize: 10, fill: '#D8DEE9' }}
+              tick={{ fontSize: 10, fill: '#94a3b8' }}
+              label={{ value: 'mm', angle: -90, position: 'insideLeft', fontSize: 10, fill: '#94a3b8' }}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#2E3440',
-                border: '1px solid #4C566A',
+                backgroundColor: '#0f172a',
+                border: '1px solid #334155',
                 borderRadius: '8px',
                 fontSize: '12px',
-                color: '#ECEFF4',
+                color: '#f1f5f9',
               }}
               formatter={(value, name, props) => {
                 if (name === 'snow') {
@@ -77,14 +77,14 @@ export function ForecastChart() {
             />
             <Bar 
               dataKey="snow" 
-              fill="#88C0D0" 
+              fill="#38bdf8" 
               radius={[4, 4, 0, 0]}
             />
           </BarChart>
         </ResponsiveContainer>
       </div>
 
-      <div className="mt-4 pt-4 border-t border-[#4C566A] flex justify-between text-sm text-[#D8DEE9]">
+      <div className="mt-4 pt-4 border-t border-slate-700 flex justify-between text-sm text-slate-300">
         <span>Terskel: {settings.snowThreshold.toFixed(1)} mm</span>
         <span>Total: {chartData.reduce((sum, d) => sum + d.snow, 0).toFixed(1)} mm</span>
       </div>

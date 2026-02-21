@@ -78,7 +78,7 @@ function AppContent() {
      * bg-slate-900: Mørk bakgrunnsfarge
      * pb-20: Padding bottom for å gi plass til navigation
      */
-    <div className="min-h-screen bg-[#2E3440] pb-20">
+    <div className="min-h-screen bg-slate-950 pb-20">
       
       {/* =====================
        * PWA Oppdaterings-varsel
@@ -95,7 +95,7 @@ function AppContent() {
        * - App-tittel
        * - Kreditering til Met.no
        */}
-      <header className="bg-gradient-to-r from-[#3B4252] via-[#434C5E] to-[#3B4252] shadow-md z-10">
+      <header className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 shadow-md z-10">
         <div className="max-w-2xl mx-auto px-4 py-4">
           {/* App-tittel */}
           <h1 className="text-2xl font-extrabold text-white">❄️ Snømåkingsanalysator</h1>
@@ -105,7 +105,7 @@ function AppContent() {
             href={metUrl}
             target="_blank" 
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-[#4C566A] hover:text-[#88C0D0] mt-2"
+            className="inline-flex items-center gap-1 text-xs text-slate-500 hover:text-sky-400 mt-2"
           >
             Data: Meteorologisk institutt (Met.no) →
           </a>
@@ -143,7 +143,7 @@ function AppContent() {
        * Viser alle 4 faner med icon og label.
        * Styling indikerer aktiv fane.
        */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-[#3B4252] border-t border-[#4C566A]">
+      <nav className="fixed bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-700">
         <div className="max-w-2xl mx-auto px-4">
           <div className="flex justify-around py-2">
             {tabs.map((tab) => (
@@ -152,8 +152,8 @@ function AppContent() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex flex-col items-center py-2 px-4 rounded-lg transition-colors ${
                   activeTab === tab.id
-                    ? 'text-[#88C0D0] bg-[#434C5E]'
-                    : 'text-[#D8DEE9] hover:text-white'
+                    ? 'text-sky-400 bg-slate-800'
+                    : 'text-slate-300 hover:text-white'
                 }`}
               >
                 <span className="text-lg">{tab.icon}</span>
@@ -175,7 +175,7 @@ function AppContent() {
           href="https://duvsethe.it" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="text-xs text-[#4C566A] hover:text-[#88C0D0] transition-colors"
+          className="text-xs text-slate-500 hover:text-sky-400 transition-colors"
         >
           v{VERSION} ({BUILD_DATE}) | Utviklet av Duvsethe IT
         </a>

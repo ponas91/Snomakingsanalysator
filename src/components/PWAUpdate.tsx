@@ -57,17 +57,17 @@ export function PWAUpdateNotification({
 
   return (
     <div className="fixed bottom-4 left-4 right-4 z-50 animate-slide-up">
-      <div className="bg-[#5E81AC] text-white p-4 rounded-xl shadow-lg flex items-center justify-between gap-4">
+      <div className="bg-sky-600 text-white p-4 rounded-xl shadow-lg flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <span className="text-2xl">📦</span>
           <div>
             <p className="font-medium">Ny versjon tilgjengelig</p>
-            <p className="text-sm text-[#D8DEE9]">Oppdater for å få de nyeste funksjonene</p>
+            <p className="text-sm text-sky-200">Oppdater for å få de nyeste funksjonene</p>
           </div>
         </div>
         <button
           onClick={onUpdate}
-          className="px-4 py-2 bg-white text-[#5E81AC] rounded-lg font-medium hover:bg-[#ECEFF4] transition-colors shrink-0"
+          className="px-4 py-2 bg-white text-sky-600 rounded-lg font-medium hover:bg-sky-50 transition-colors shrink-0"
         >
           Oppdater
         </button>
