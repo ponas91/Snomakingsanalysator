@@ -29,7 +29,7 @@ export function ForecastChart() {
     return '🌧️';
   };
 
-  if (!weather) {
+  if (!weather || chartData.length === 0) {
     return null;
   }
 
@@ -37,7 +37,7 @@ export function ForecastChart() {
     <div className="bg-slate-800 rounded-xl shadow-md p-6">
       <h2 className="text-lg font-semibold text-white border-b border-slate-700 pb-3 mb-4">Snøprognose (24 timer)</h2>
       
-      <div className="h-48">
+      <div className="h-48" style={{ minHeight: '192px' }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
             <XAxis 
