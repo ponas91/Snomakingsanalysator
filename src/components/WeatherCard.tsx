@@ -45,25 +45,25 @@ export function WeatherCard() {
   const pentUrl = `https://pent.no/${lat},${lon}`;
 
   return (
-    <div className="bg-slate-800 rounded-xl shadow-md p-6">
-      <div className="flex justify-between items-center border-b border-slate-700 pb-3 mb-4">
-        <h2 className="text-lg font-semibold text-white">Vær nå</h2>
+    <div className="bg-[#3B4252] rounded-xl shadow-md p-6">
+      <div className="flex justify-between items-center border-b border-[#4C566A] pb-3 mb-4">
+        <h2 className="text-lg font-semibold text-[#ECEFF4]">Vær nå</h2>
         <button
           onClick={refreshWeather}
           disabled={loading}
-          className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 disabled:opacity-50"
+          className="px-4 py-2 bg-[#5E81AC] text-white text-sm rounded-lg hover:bg-[#81A1C1] disabled:opacity-50"
         >
           {loading ? 'Oppdaterer...' : 'Oppdater'}
         </button>
       </div>
 
       {error && (
-        <div className="bg-red-900/50 text-red-400 p-3 rounded-lg mb-4 text-sm">
+        <div className="bg-[#BF616A]/30 text-[#BF616A] p-3 rounded-lg mb-4 text-sm">
           {error}
         </div>
       )}
 
-      <div className="flex items-center gap-2 mb-4 text-sm text-slate-400">
+      <div className="flex items-center gap-2 mb-4 text-sm text-[#D8DEE9]">
         <span>📍</span>
         <span>{state.settings.location.name}</span>
       </div>
@@ -72,46 +72,46 @@ export function WeatherCard() {
         <div className="grid grid-cols-3 gap-4">
           <div className="text-center">
             <div className="text-3xl mb-1">🌡️</div>
-            <div className="text-2xl font-bold text-white">{weather.current.temperature}°</div>
-            <div className="text-xs text-slate-400">Temperatur</div>
+            <div className="text-2xl font-bold text-[#ECEFF4]">{weather.current.temperature}°</div>
+            <div className="text-xs text-[#D8DEE9]">Temperatur</div>
           </div>
           <div className="text-center">
             {weather.current.precipitation > 0 ? (
               <>
                 <div className="text-3xl mb-1">{precipIcons[weather.current.precipitationType] || '🌧️'}</div>
-                <div className="text-2xl font-bold text-white">{weather.current.snow.toFixed(1)} mm</div>
-                <div className="text-xs text-slate-400">{getPrecipLabel(weather.current.precipitationType)}</div>
+                <div className="text-2xl font-bold text-[#ECEFF4]">{weather.current.snow.toFixed(1)} mm</div>
+                <div className="text-xs text-[#D8DEE9]">{getPrecipLabel(weather.current.precipitationType)}</div>
               </>
             ) : (
               <>
                 <div className="text-3xl mb-1">{getWeatherEmojiWithDayNight(weather.current.weatherCondition)}</div>
-                <div className="text-2xl font-bold text-white">{getWeatherConditionLabel(weather.current.weatherCondition)}</div>
-                <div className="text-xs text-slate-400">Vær</div>
+                <div className="text-2xl font-bold text-[#ECEFF4]">{getWeatherConditionLabel(weather.current.weatherCondition)}</div>
+                <div className="text-xs text-[#D8DEE9]">Vær</div>
               </>
             )}
           </div>
           <div className="text-center">
             <div className="text-3xl mb-1">💨</div>
-            <div className="text-2xl font-bold text-white">{weather.current.windSpeed} m/s</div>
-            <div className="text-xs text-slate-400">Vind</div>
+            <div className="text-2xl font-bold text-[#ECEFF4]">{weather.current.windSpeed} m/s</div>
+            <div className="text-xs text-[#D8DEE9]">Vind</div>
           </div>
         </div>
       ) : (
-        <div className="text-center text-slate-400 py-4">
+        <div className="text-center text-[#D8DEE9] py-4">
           {loading ? 'Laster værdata...' : 'Ingen værdata tilgjengelig'}
         </div>
       )}
 
       {weather && (
-        <div className="mt-4 pt-4 border-t border-slate-700 space-y-2">
-          <p className="text-xs text-slate-500 text-center">
+        <div className="mt-4 pt-4 border-t border-[#4C566A] space-y-2">
+          <p className="text-xs text-[#4C566A] text-center">
             Oppdatert: {formatTime(weather.updatedAt)}
           </p>
           <a 
             href={pentUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-center text-xs text-blue-400 hover:text-blue-300"
+            className="block text-center text-xs text-[#88C0D0] hover:text-[#81A1C1]"
           >
             Sjekk varsel på Pent.no →
           </a>

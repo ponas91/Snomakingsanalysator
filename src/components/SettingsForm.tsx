@@ -114,15 +114,15 @@ export function SettingsForm() {
   };
 
   return (
-    <div className="bg-slate-800 rounded-xl shadow-md p-6">
-      <h2 className="text-lg font-semibold text-white mb-4">Innstillinger</h2>
+    <div className="bg-[#3B4252] rounded-xl shadow-md p-6">
+      <h2 className="text-lg font-semibold text-[#ECEFF4] mb-4">Innstillinger</h2>
 
       <div className="space-y-6">
         <div>
-          <h3 className="font-medium text-slate-300 mb-3">Lokasjon</h3>
+          <h3 className="font-medium text-[#D8DEE9] mb-3">Lokasjon</h3>
           <div className="space-y-3" ref={containerRef}>
             <div>
-              <label className="block text-sm text-slate-400 mb-1">Sted</label>
+              <label className="block text-sm text-[#D8DEE9] mb-1">Sted</label>
               <div className="relative">
                 <input
                   type="text"
@@ -130,24 +130,24 @@ export function SettingsForm() {
                   onChange={(e) => handleSearchChange(e.target.value)}
                   onFocus={() => searchQuery.length >= 2 && setShowSuggestions(true)}
                   placeholder="Søk etter et sted..."
-                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 bg-[#434C5E] border border-[#4C566A] rounded-lg text-white focus:ring-2 focus:ring-[#88C0D0] focus:border-[#88C0D0]"
                   autoComplete="off"
                 />
                 {isSearching && (
                   <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                    <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-[#88C0D0] border-t-transparent rounded-full animate-spin" />
                   </div>
                 )}
                 {showSuggestions && suggestions.length > 0 && (
-                  <div className="absolute z-10 w-full mt-1 bg-slate-700 border border-slate-600 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                  <div className="absolute z-10 w-full mt-1 bg-[#434C5E] border border-[#4C566A] rounded-lg shadow-lg max-h-60 overflow-y-auto">
                     {suggestions.map((suggestion, index) => (
                       <button
                         key={index}
                         onClick={() => handleSelectSuggestion(suggestion)}
-                        className="w-full px-3 py-2 text-left text-sm text-slate-200 hover:bg-slate-600 transition-colors first:rounded-t-lg last:rounded-b-lg"
+                        className="w-full px-3 py-2 text-left text-sm text-[#D8DEE9] hover:bg-[#4C566A] transition-colors first:rounded-t-lg last:rounded-b-lg"
                       >
                         <div className="font-medium">{suggestion.name}</div>
-                        <div className="text-xs text-slate-400 truncate">
+                        <div className="text-xs text-[#4C566A] truncate">
                           {suggestion.display_name}
                         </div>
                       </button>
@@ -155,7 +155,7 @@ export function SettingsForm() {
                   </div>
                 )}
                 {showSuggestions && !isSearching && suggestions.length === 0 && searchQuery.length >= 2 && (
-                  <div className="absolute z-10 w-full mt-1 bg-slate-700 border border-slate-600 rounded-lg shadow-lg p-3 text-sm text-slate-400">
+                  <div className="absolute z-10 w-full mt-1 bg-[#434C5E] border border-[#4C566A] rounded-lg shadow-lg p-3 text-sm text-[#4C566A]">
                     Ingen steder funnet
                   </div>
                 )}
@@ -163,37 +163,37 @@ export function SettingsForm() {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm text-slate-400 mb-1">Breddegrad</label>
+                <label className="block text-sm text-[#D8DEE9] mb-1">Breddegrad</label>
                 <input
                   type="number"
                   step="0.0001"
                   value={formData.location.lat}
                   onChange={(e) => handleLocationChange('lat', parseFloat(e.target.value))}
-                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 bg-[#434C5E] border border-[#4C566A] rounded-lg text-white focus:ring-2 focus:ring-[#88C0D0] focus:border-[#88C0D0]"
                 />
               </div>
               <div>
-                <label className="block text-sm text-slate-400 mb-1">Lengdegrad</label>
+                <label className="block text-sm text-[#D8DEE9] mb-1">Lengdegrad</label>
                 <input
                   type="number"
                   step="0.0001"
                   value={formData.location.lon}
                   onChange={(e) => handleLocationChange('lon', parseFloat(e.target.value))}
-                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 bg-[#434C5E] border border-[#4C566A] rounded-lg text-white focus:ring-2 focus:ring-[#88C0D0] focus:border-[#88C0D0]"
                 />
               </div>
             </div>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[#4C566A]">
               Velg et sted fra listen, eller skriv inn koordinater manuelt.
             </p>
           </div>
         </div>
 
-        <div className="border-t border-slate-700 pt-4">
-          <h3 className="font-medium text-slate-300 mb-3">Varslingsinnstillinger</h3>
+        <div className="border-t border-[#4C566A] pt-4">
+          <h3 className="font-medium text-[#D8DEE9] mb-3">Varslingsinnstillinger</h3>
           <div className="space-y-3">
             <div>
-              <label className="block text-sm text-slate-400 mb-1">
+              <label className="block text-sm text-[#D8DEE9] mb-1">
                 Snøterskel (cm)
               </label>
               <input
@@ -202,17 +202,17 @@ export function SettingsForm() {
                 max="100"
                 value={formData.snowThreshold}
                 onChange={(e) => handleChange('snowThreshold', parseInt(e.target.value))}
-                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 bg-[#434C5E] border border-[#4C566A] rounded-lg text-white focus:ring-2 focus:ring-[#88C0D0] focus:border-[#88C0D0]"
               />
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-[#4C566A] mt-1">
                 Du vil bli varslet når det er ventet mer enn dette.
               </p>
             </div>
 
             <div className="flex items-center justify-between">
               <div>
-                <label className="text-sm text-slate-300">Varsle ved snø</label>
-                <p className="text-xs text-slate-500">Få beskjed når det begynner å snø</p>
+                <label className="text-sm text-[#D8DEE9]">Varsle ved snø</label>
+                <p className="text-xs text-[#4C566A]">Få beskjed når det begynner å snø</p>
               </div>
               <button
                 type="button"
@@ -224,7 +224,7 @@ export function SettingsForm() {
                   handleChange('notifyOnSnow', !formData.notifyOnSnow);
                 }}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  formData.notifyOnSnow ? 'bg-blue-600' : 'bg-slate-600'
+                  formData.notifyOnSnow ? 'bg-[#88C0D0]' : 'bg-[#4C566A]'
                 }`}
               >
                 <span
@@ -237,14 +237,14 @@ export function SettingsForm() {
 
             <div className="flex items-center justify-between">
               <div>
-                <label className="text-sm text-slate-300">Varsle på dagtid</label>
-                <p className="text-xs text-slate-500">Kl. 09:00 - 18:00</p>
+                <label className="text-sm text-[#D8DEE9]">Varsle på dagtid</label>
+                <p className="text-xs text-[#4C566A]">Kl. 09:00 - 18:00</p>
               </div>
               <button
                 type="button"
                 onClick={() => handleChange('notifyDay', !formData.notifyDay)}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  formData.notifyDay ? 'bg-blue-600' : 'bg-slate-600'
+                  formData.notifyDay ? 'bg-[#88C0D0]' : 'bg-[#4C566A]'
                 }`}
               >
                 <span
@@ -257,14 +257,14 @@ export function SettingsForm() {
 
             <div className="flex items-center justify-between">
               <div>
-                <label className="text-sm text-slate-300">Varsle på natttid</label>
-                <p className="text-xs text-slate-500">Kl. 18:00 - 09:00</p>
+                <label className="text-sm text-[#D8DEE9]">Varsle på natttid</label>
+                <p className="text-xs text-[#4C566A]">Kl. 18:00 - 09:00</p>
               </div>
               <button
                 type="button"
                 onClick={() => handleChange('notifyNight', !formData.notifyNight)}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  formData.notifyNight ? 'bg-blue-600' : 'bg-slate-600'
+                  formData.notifyNight ? 'bg-[#88C0D0]' : 'bg-[#4C566A]'
                 }`}
               >
                 <span
@@ -279,20 +279,20 @@ export function SettingsForm() {
 
         <button
           onClick={handleSave}
-          className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="w-full px-4 py-2 bg-[#5E81AC] text-white rounded-lg hover:bg-[#81A1C1] transition-colors"
         >
           {saved ? 'Lagret!' : 'Lagre innstillinger'}
         </button>
 
         {isInstallable && (
-          <div className="border-t border-slate-700 pt-4">
-            <h3 className="font-medium text-slate-300 mb-3">Installer appen</h3>
-            <p className="text-xs text-slate-500 mb-3">
+          <div className="border-t border-[#4C566A] pt-4">
+            <h3 className="font-medium text-[#D8DEE9] mb-3">Installer appen</h3>
+            <p className="text-xs text-[#4C566A] mb-3">
               Installer appen på enheten din for raskere tilgang og bedre opplevelse.
             </p>
             <button
               onClick={handleInstall}
-              className="w-full px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+              className="w-full px-4 py-3 bg-[#A3BE8C] text-white rounded-lg hover:bg-[#81A1C1] transition-colors flex items-center justify-center gap-2"
             >
               <span>📲</span>
               <span>Installer på {/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'enhet' : 'skrivebord'}</span>
@@ -300,14 +300,14 @@ export function SettingsForm() {
           </div>
         )}
 
-        <div className="border-t border-slate-700 pt-4">
-          <h3 className="font-medium text-slate-300 mb-3">Tilbakemelding</h3>
-          <p className="text-xs text-slate-500 mb-3">
+        <div className="border-t border-[#4C566A] pt-4">
+          <h3 className="font-medium text-[#D8DEE9] mb-3">Tilbakemelding</h3>
+          <p className="text-xs text-[#4C566A] mb-3">
             Fant du en feil eller har forslag til forbedringer? Send en e-post til oss.
           </p>
           <a
             href="mailto:jonas.duvsethe91@gmail.com?subject=Snømåkingsanalysator - Tilbakemelding"
-            className="block w-full px-4 py-2 bg-slate-600 text-white text-center rounded-lg hover:bg-slate-500 transition-colors"
+            className="block w-full px-4 py-2 bg-[#4C566A] text-white text-center rounded-lg hover:bg-[#5E81AC] transition-colors"
           >
             ✉️ Send tilbakemelding
           </a>
