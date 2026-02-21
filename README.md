@@ -53,8 +53,9 @@ Deploy `dist`-mappen til en webserver.
 ## Innstillinger
 
 - **Lokasjon**: Søk etter sted eller angi koordinater manuelt
-- **Snøterskel**: Varsling ved X mm nedbør (default: 10 mm)
-- **Varsling**: Aktiver/deaktiver for dagtid og natt
+- **Snøterskel**: Varsling ved X cm snø (default: 10 cm)
+- **Varsle ved snø**: Aktiver for å få beskjed når det begynner å snø
+- **Varsling**: Aktiver/deaktiver for dagtid (09:00-18:00) og natt (18:00-09:00)
 - **Kontakter**: Legg til, rediger eller slett entreprenører
 
 ## Datakilder

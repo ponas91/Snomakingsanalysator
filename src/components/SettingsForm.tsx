@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useApp } from '../hooks/useApp';
 import type { Settings } from '../types';
 import { searchPlaces, type GeocodingResult } from '../services/geocoding';
+import { requestNotificationPermission } from '../services/notifications';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
@@ -206,6 +207,32 @@ export function SettingsForm() {
               <p className="text-xs text-slate-500 mt-1">
                 Du vil bli varslet når det er ventet mer enn dette.
               </p>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <label className="text-sm text-slate-300">Varsle ved snø</label>
+                <p className="text-xs text-slate-500">Få beskjed når det begynner å snø</p>
+              </div>
+              <button
+                type="button"
+                onClick={async () => {
+                  if (!formData.notifyOnSnow) {
+                    const granted = await requestNotificationPermission();
+                    if (!granted) return;
+                  }
+                  handleChange('notifyOnSnow', !formData.notifyOnSnow);
+                }}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  formData.notifyOnSnow ? 'bg-blue-600' : 'bg-slate-600'
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    formData.notifyOnSnow ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
             </div>
 
             <div className="flex items-center justify-between">
