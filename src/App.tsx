@@ -83,6 +83,17 @@ function AppContent() {
           </div>
         </div>
       </nav>
+
+      <footer className="pb-24 pt-4 text-center">
+        <a 
+          href="https://duvsethe.it" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-xs text-slate-600 hover:text-slate-400 transition-colors"
+        >
+          Utviklet av Duvsethe IT
+        </a>
+      </footer>
     </div>
   );
 }
