@@ -7,12 +7,14 @@ import { SnowStatusCard } from './components/SnowStatusCard';
 import { HistoryTable } from './components/HistoryTable';
 import { SettingsForm } from './components/SettingsForm';
 import { ContractorCard } from './components/ContractorCard';
+import { usePWAAutoUpdate, PWAUpdateNotification } from './components/PWAUpdate';
 
 type Tab = 'home' | 'history' | 'settings' | 'contractor';
 
 function AppContent() {
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const { state } = useApp();
+  const { updateAvailable, updateApp } = usePWAAutoUpdate();
 
   const metUrl = `https://www.met.no/`;
 
@@ -25,6 +27,8 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-slate-900 pb-20">
+      <PWAUpdateNotification updateAvailable={updateAvailable} onUpdate={updateApp} />
+      
       <header className="bg-slate-800 shadow-md sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-4">
           <h1 className="text-xl font-bold text-white">❄️ Snømåkingsanalysator</h1>
