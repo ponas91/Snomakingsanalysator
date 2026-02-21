@@ -1,5 +1,17 @@
 import { useApp } from '../hooks/useApp';
 import { getWeatherConditionEmoji, getWeatherConditionLabel } from '../services/metno';
+import { isNightTime } from '../services/notifications';
+
+function getWeatherEmojiWithDayNight(condition: string): string {
+  const night = isNightTime();
+  
+  // Ved klarvær eller pent vær, vis måne om natten
+  if (condition === 'clearsky' || condition === 'fair') {
+    return night ? '🌙' : getWeatherConditionEmoji(condition);
+  }
+  
+  return getWeatherConditionEmoji(condition);
+}
 
 export function WeatherCard() {
   const { state, refreshWeather } = useApp();
@@ -64,7 +76,7 @@ export function WeatherCard() {
               </>
             ) : (
               <>
-                <div className="text-3xl mb-1">{getWeatherConditionEmoji(weather.current.weatherCondition)}</div>
+                <div className="text-3xl mb-1">{getWeatherEmojiWithDayNight(weather.current.weatherCondition)}</div>
                 <div className="text-2xl font-bold text-white">{getWeatherConditionLabel(weather.current.weatherCondition)}</div>
                 <div className="text-xs text-slate-400">Vær</div>
               </>
