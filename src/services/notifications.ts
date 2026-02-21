@@ -66,11 +66,15 @@ export function showNotification(title: string, body: string): void {
 
   // Send kun hvis tillatelse er gitt
   if (Notification.permission === 'granted') {
-    new Notification(title, {
-      body,
-      icon: '/pwa-192x192.svg',     // Ikon i varslingen
-      badge: '/pwa-192x192.svg',    // Ikon i statuslinjen
-    });
+    try {
+      new Notification(title, {
+        body,
+        icon: '/pwa-192x192.svg',
+        badge: '/pwa-192x192.svg',
+      });
+    } catch (error) {
+      console.log('Failed to show notification:', error);
+    }
   }
 }
 
