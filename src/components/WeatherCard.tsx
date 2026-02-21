@@ -5,9 +5,15 @@ import { isNightTime } from '../services/notifications';
 function getWeatherEmojiWithDayNight(condition: string): string {
   const night = isNightTime();
   
-  // Ved klarvær eller pent vær, vis måne om natten
-  if (condition === 'clearsky' || condition === 'fair') {
-    return night ? '🌙' : getWeatherConditionEmoji(condition);
+  // Ved klare værforhold, vis måne om natten
+  const clearConditions = ['clearsky', 'fair', 'partlycloudy', 'cloudy'];
+  
+  if (night && clearConditions.includes(condition)) {
+    // Ved skyet og delvis skyet, vis måne likevel om natten
+    if (condition === 'cloudy' || condition === 'partlycloudy') {
+      return '🌙';
+    }
+    return '🌙';
   }
   
   return getWeatherConditionEmoji(condition);
