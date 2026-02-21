@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { useApp } from '../context/AppContext';
+import { useApp } from '../hooks/useApp';
+import { getWeatherConditionEmoji, getWeatherConditionLabel } from '../services/metno';
 
 export function ForecastChart() {
   const { state } = useApp();
@@ -14,10 +15,19 @@ export function ForecastChart() {
       return {
         time: date.getHours().toString().padStart(2, '0') + ':00',
         snow: entry.snow,
-        temp: entry.temperature,
+        precipitationType: entry.precipitationType,
+        precipitation: entry.precipitation,
+        temperature: entry.temperature,
+        weatherCondition: entry.weatherCondition,
       };
     });
   }, [weather]);
+
+  const getPrecipIcon = (type: string) => {
+    if (type === 'snow') return '❄️';
+    if (type === 'sleet') return '🌨️';
+    return '🌧️';
+  };
 
   if (!weather) {
     return null;
@@ -25,7 +35,7 @@ export function ForecastChart() {
 
   return (
     <div className="bg-slate-800 rounded-xl shadow-md p-6">
-      <h2 className="text-lg font-semibold text-white mb-4">Snøprognose (24 timer)</h2>
+      <h2 className="text-lg font-semibold text-white border-b border-slate-700 pb-3 mb-4">Snøprognose (24 timer)</h2>
       
       <div className="h-48">
         <ResponsiveContainer width="100%" height="100%">
@@ -37,7 +47,7 @@ export function ForecastChart() {
             />
             <YAxis 
               tick={{ fontSize: 10, fill: '#94a3b8' }}
-              label={{ value: 'cm', angle: -90, position: 'insideLeft', fontSize: 10, fill: '#94a3b8' }}
+              label={{ value: 'mm', angle: -90, position: 'insideLeft', fontSize: 10, fill: '#94a3b8' }}
             />
             <Tooltip
               contentStyle={{
@@ -47,7 +57,22 @@ export function ForecastChart() {
                 fontSize: '12px',
                 color: '#f1f5f9',
               }}
-              formatter={(value) => [`${Number(value).toFixed(1)} cm`, 'Snø']}
+              formatter={(value, name, props) => {
+                if (name === 'snow') {
+                  const hasPrecip = props.payload.precipitation > 0;
+                  const icon = hasPrecip 
+                    ? getPrecipIcon(props.payload.precipitationType)
+                    : getWeatherConditionEmoji(props.payload.weatherCondition);
+                  const label = hasPrecip 
+                    ? 'Nedbør'
+                    : getWeatherConditionLabel(props.payload.weatherCondition);
+                  return [
+                    `${icon} ${Number(value).toFixed(1)} mm\n🌡️ ${props.payload.temperature}°C`,
+                    label
+                  ];
+                }
+                return [value, name];
+              }}
               labelFormatter={(label) => `Kl. ${label}`}
             />
             <Bar 
@@ -60,8 +85,8 @@ export function ForecastChart() {
       </div>
 
       <div className="mt-4 pt-4 border-t border-slate-700 flex justify-between text-sm text-slate-400">
-        <span>Terskel: {settings.snowThreshold} cm</span>
-        <span>Total: {chartData.reduce((sum, d) => sum + d.snow, 0).toFixed(1)} cm</span>
+        <span>Terskel: {settings.snowThreshold.toFixed(1)} mm</span>
+        <span>Total: {chartData.reduce((sum, d) => sum + d.snow, 0).toFixed(1)} mm</span>
       </div>
     </div>
   );

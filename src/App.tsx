@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { AppProvider, useApp } from './context/AppContext';
+import { AppProvider } from './context/AppContext';
+import { useApp } from './hooks/useApp';
 import { WeatherCard } from './components/WeatherCard';
 import { ForecastChart } from './components/ForecastChart';
 import { SnowStatusCard } from './components/SnowStatusCard';
@@ -13,8 +14,7 @@ function AppContent() {
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const { state } = useApp();
 
-  const { lat, lon } = state.settings.location;
-  const pentUrl = `https://pent.no/${lat},${lon}`;
+  const metUrl = `https://www.met.no/`;
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
     { id: 'home', label: 'Hjem', icon: '🏠' },
@@ -33,17 +33,17 @@ function AppContent() {
             <span className="text-lg font-medium text-blue-300">{state.settings.location.name}</span>
           </div>
           <a 
-            href={pentUrl}
+            href={metUrl}
             target="_blank" 
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-xs text-slate-500 hover:text-slate-400 mt-2"
           >
-            Data: Meteorologisk institutt (Pent.no) →
+            Data: Meteorologisk institutt (Met.no) →
           </a>
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 py-6 space-y-4 overflow-y-auto" style={{ height: 'calc(100vh - 140px)' }}>
+      <main className="max-w-2xl mx-auto px-4 py-6 space-y-4 flex-1 overflow-hidden">
         {activeTab === 'home' && (
           <>
             <WeatherCard />

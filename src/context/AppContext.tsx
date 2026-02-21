@@ -1,13 +1,15 @@
-import React, { createContext, useContext, useReducer, useEffect, useRef } from 'react';
+import React, { createContext, useReducer, useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
-import type { AppState, AppAction, Settings, SnowEntry, Contractor } from '../types';
+import type { AppState, AppAction, Settings, SnowEntry, Contractor, WeatherData } from '../types';
 import { fetchWeatherData, calculateSnowInPeriod } from '../services/metno';
+import { showNotification, isDayTime, isNightTime } from '../services/notifications';
 import { getFromLocalStorage, setToLocalStorage } from '../hooks/useLocalStorage';
 
 const STORAGE_KEYS = {
   SETTINGS: 'snomaking_settings',
   HISTORY: 'snomaking_history',
   CONTRACTORS: 'snomaking_contractors',
+  WEATHER: 'snomaking_weather',
 };
 
 const DEFAULT_SETTINGS: Settings = {
@@ -20,6 +22,7 @@ const DEFAULT_SETTINGS: Settings = {
   notifyNight: true,
   notifyDay: true,
   notifyEnabled: true,
+  notifyOnSnow: false,
 };
 
 function cleanOldHistory(entries: SnowEntry[]): SnowEntry[] {
@@ -35,6 +38,7 @@ const initialState: AppState = {
   contractors: [],
   loading: false,
   error: null,
+  lastNotifiedSnow: null,
 };
 
 function appReducer(state: AppState, action: AppAction): AppState {
@@ -43,6 +47,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
       setToLocalStorage(STORAGE_KEYS.SETTINGS, action.payload);
       return { ...state, settings: action.payload };
     case 'SET_WEATHER':
+      setToLocalStorage(STORAGE_KEYS.WEATHER, action.payload);
       return { ...state, weather: action.payload };
     case 'SET_HISTORY':
       setToLocalStorage(STORAGE_KEYS.HISTORY, action.payload);
@@ -89,6 +94,8 @@ function appReducer(state: AppState, action: AppAction): AppState {
       return { ...state, loading: action.payload };
     case 'SET_ERROR':
       return { ...state, error: action.payload };
+    case 'SET_LAST_NOTIFIED_SNOW':
+      return { ...state, lastNotifiedSnow: action.payload };
     default:
       return state;
   }
@@ -101,12 +108,14 @@ interface AppContextType {
   getSnowStatus: () => { status: 'normal' | 'warning' | 'critical'; snowAmount: number };
 }
 
-const AppContext = createContext<AppContextType | undefined>(undefined);
+// eslint-disable-next-line react-refresh/only-export-components
+export const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
 
   const locationRef = useRef(state.settings.location);
+  const initialLoadComplete = useRef(false);
 
   useEffect(() => {
     locationRef.current = state.settings.location;
@@ -121,6 +130,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     const savedContractors = getFromLocalStorage<Contractor[]>(STORAGE_KEYS.CONTRACTORS, []);
     dispatch({ type: 'SET_CONTRACTORS', payload: savedContractors });
+
+    const savedWeather = getFromLocalStorage<WeatherData | null>(STORAGE_KEYS.WEATHER, null);
+    if (savedWeather) {
+      dispatch({ type: 'SET_WEATHER', payload: savedWeather });
+    }
+
+    initialLoadComplete.current = true;
   }, []);
 
   const refreshWeather = async () => {
@@ -130,6 +146,31 @@ export function AppProvider({ children }: { children: ReactNode }) {
     try {
       const weather = await fetchWeatherData(locationRef.current.lat, locationRef.current.lon);
       dispatch({ type: 'SET_WEATHER', payload: weather });
+
+      const { settings, lastNotifiedSnow } = state;
+      const currentPrecipType = weather.current.precipitationType;
+      const now = new Date().toISOString();
+
+      const shouldNotify = () => {
+        if (!settings.notifyOnSnow) return false;
+        if (isDayTime() && !settings.notifyDay) return false;
+        if (isNightTime() && !settings.notifyNight) return false;
+        return true;
+      };
+
+      if (shouldNotify() && currentPrecipType === 'snow') {
+        const oneHourAgo = new Date();
+        oneHourAgo.setHours(oneHourAgo.getHours() - 1);
+        
+        if (!lastNotifiedSnow || new Date(lastNotifiedSnow) < oneHourAgo) {
+          showNotification('🥶 Det snør!', 'Vurder å bestille brøyting.');
+          dispatch({ type: 'SET_LAST_NOTIFIED_SNOW', payload: now });
+        }
+      }
+
+      if (currentPrecipType !== 'snow') {
+        dispatch({ type: 'SET_LAST_NOTIFIED_SNOW', payload: null });
+      }
     } catch (error) {
       dispatch({ type: 'SET_ERROR', payload: error instanceof Error ? error.message : 'Ukjent feil' });
     } finally {
@@ -138,10 +179,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    if (!initialLoadComplete.current) return;
     if (state.settings.location.lat && state.settings.location.lon) {
       refreshWeather();
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialLoadComplete.current]);
+
+  useEffect(() => {
+    if (!initialLoadComplete.current) return;
+    if (state.settings.location.lat && state.settings.location.lon) {
+      refreshWeather();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.settings.location.lat, state.settings.location.lon]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -149,6 +200,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }, 15 * 60 * 1000);
 
     return () => clearInterval(intervalId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -160,6 +212,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getSnowStatus = () => {
@@ -184,12 +237,4 @@ export function AppProvider({ children }: { children: ReactNode }) {
       {children}
     </AppContext.Provider>
   );
-}
-
-export function useApp() {
-  const context = useContext(AppContext);
-  if (context === undefined) {
-    throw new Error('useApp must be used within an AppProvider');
-  }
-  return context;
 }

@@ -1,13 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
-import { useApp } from '../context/AppContext';
+import { useApp } from '../hooks/useApp';
 import type { Settings } from '../types';
 import { searchPlaces, type GeocodingResult } from '../services/geocoding';
+
+interface BeforeInstallPromptEvent extends Event {
+  prompt(): Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
 
 export function SettingsForm() {
   const { state, dispatch, refreshWeather } = useApp();
   const [formData, setFormData] = useState<Settings>(state.settings);
   const [saved, setSaved] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] = useState<Event | null>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstallable, setIsInstallable] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState(state.settings.location.name);
@@ -20,7 +25,7 @@ export function SettingsForm() {
   useEffect(() => {
     const handler = (e: Event) => {
       e.preventDefault();
-      setDeferredPrompt(e);
+      setDeferredPrompt(e as BeforeInstallPromptEvent);
       setIsInstallable(true);
     };
     window.addEventListener('beforeinstallprompt', handler);
@@ -40,8 +45,8 @@ export function SettingsForm() {
 
   const handleInstall = async () => {
     if (!deferredPrompt) return;
-    (deferredPrompt as any).prompt();
-    const { outcome } = await (deferredPrompt as any).userChoice;
+    await deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
     if (outcome === 'accepted') {
       setDeferredPrompt(null);
       setIsInstallable(false);

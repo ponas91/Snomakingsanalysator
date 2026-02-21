@@ -10,6 +10,7 @@ export interface Settings {
   notifyNight: boolean;
   notifyDay: boolean;
   notifyEnabled: boolean;
+  notifyOnSnow: boolean;
 }
 
 export interface SnowEntry {
@@ -28,11 +29,15 @@ export interface Contractor {
   isPrimary?: boolean;
 }
 
+export type PrecipitationType = 'snow' | 'sleet' | 'rain';
+
 export interface HourlyForecast {
   time: string;
   snow: number;
+  precipitationType: PrecipitationType;
   temperature: number;
   precipitation: number;
+  weatherCondition: string;
 }
 
 export interface WeatherData {
@@ -40,6 +45,9 @@ export interface WeatherData {
   current: {
     temperature: number;
     snow: number;
+    precipitationType: PrecipitationType;
+    precipitation: number;
+    weatherCondition: string;
     windSpeed: number;
   };
   hourly: HourlyForecast[];
@@ -64,7 +72,10 @@ export interface MetNoTimeseries {
       };
     };
     next_6_hours?: {
-      details: {
+      summary?: {
+        symbol_code: string;
+      };
+      details?: {
         precipitation_amount: number;
       };
     };
@@ -86,6 +97,7 @@ export interface AppState {
   contractors: Contractor[];
   loading: boolean;
   error: string | null;
+  lastNotifiedSnow: string | null;
 }
 
 export type AppAction =
@@ -100,4 +112,5 @@ export type AppAction =
   | { type: 'DELETE_CONTRACTOR'; payload: string }
   | { type: 'SET_CONTRACTOR_PRIMARY'; payload: string }
   | { type: 'SET_LOADING'; payload: boolean }
-  | { type: 'SET_ERROR'; payload: string | null };
+  | { type: 'SET_ERROR'; payload: string | null }
+  | { type: 'SET_LAST_NOTIFIED_SNOW'; payload: string | null };

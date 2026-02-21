@@ -1,4 +1,4 @@
-import { useApp } from '../context/AppContext';
+import { useApp } from '../hooks/useApp';
 import type { SnowStatus } from '../types';
 
 interface StatusConfig {
@@ -39,9 +39,12 @@ export function SnowStatusCard() {
   const config = statusConfigs[status];
   const threshold = state.settings.snowThreshold;
 
+  const thresholdMm = threshold;
+  const snowAmountMm = snowAmount;
+
   return (
     <div className={`${config.bg} border ${config.border} rounded-xl p-6`}>
-      <div className="flex items-center gap-3 mb-2">
+      <div className="flex items-center gap-3 mb-2 border-b border-slate-700/50 pb-3">
         <span className="text-2xl">{config.icon}</span>
         <div>
           <h2 className={`text-lg font-semibold ${config.text}`}>
@@ -53,10 +56,10 @@ export function SnowStatusCard() {
       
       <div className="mt-4 flex items-center justify-between">
         <div className="text-sm text-slate-300">
-          <span className="font-medium">{snowAmount.toFixed(1)} cm</span> snø ventet (24t)
+          <span className="font-medium">{snowAmountMm.toFixed(1)} mm</span> nedbør ventet (24t)
         </div>
         <div className="text-sm text-slate-500">
-          Terskel: {threshold} cm
+          Terskel: {thresholdMm} mm
         </div>
       </div>
 

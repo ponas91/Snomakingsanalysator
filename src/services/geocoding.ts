@@ -5,6 +5,13 @@ export interface GeocodingResult {
   display_name: string;
 }
 
+interface NominatimPlace {
+  name: string | null;
+  lat: string;
+  lon: string;
+  display_name: string;
+}
+
 const NOMINATIM_BASE_URL = 'https://nominatim.openstreetmap.org/search';
 
 export async function searchPlaces(query: string): Promise<GeocodingResult[]> {
@@ -33,7 +40,7 @@ export async function searchPlaces(query: string): Promise<GeocodingResult[]> {
 
     const data = await response.json();
 
-    return data.map((item: any) => ({
+    return data.map((item: NominatimPlace) => ({
       name: item.name || item.display_name?.split(',')[0] || 'Ukjent',
       lat: parseFloat(item.lat),
       lon: parseFloat(item.lon),

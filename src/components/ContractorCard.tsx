@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useApp } from '../context/AppContext';
+import { useApp } from '../hooks/useApp';
 import type { Contractor } from '../types';
 
 function generateId(): string {
@@ -15,17 +15,49 @@ function ContractorForm({
   onSave: (c: Contractor) => void;
   onCancel: () => void;
 }) {
+  const countryCodes = [
+    { code: '+47', name: 'Norge (+47)' },
+    { code: '+46', name: 'Sverige (+46)' },
+    { code: '+45', name: 'Danmark (+45)' },
+    { code: '+358', name: 'Finland (+358)' },
+    { code: '+44', name: 'Storbritannia (+44)' },
+    { code: '+49', name: 'Tyskland (+49)' },
+    { code: '+31', name: 'Nederland (+31)' },
+    { code: '+32', name: 'Belgia (+32)' },
+    { code: '+33', name: 'Frankrike (+33)' },
+    { code: '+1', name: 'USA/Canada (+1)' },
+    { code: '+61', name: 'Australia (+61)' },
+  ];
+
+  const getCountryCode = (phone: string) => {
+    if (phone.startsWith('+')) {
+      const match = countryCodes.find(c => phone.startsWith(c.code));
+      if (match) return match.code;
+    }
+    return '+47';
+  };
+
+  const [countryCode, setCountryCode] = useState(getCountryCode(contractor?.phone || ''));
+  const [phoneNumber, setPhoneNumber] = useState(() => {
+    if (!contractor?.phone) return '';
+    const code = getCountryCode(contractor.phone);
+    return contractor.phone.replace(code, '');
+  });
+
   const [formData, setFormData] = useState<Contractor>(
     contractor || { id: '', name: '', phone: '', email: '', isPrimary: false }
   );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.phone) return;
+    if (!formData.name || !phoneNumber) return;
+    
+    const fullPhone = countryCode + phoneNumber.replace(/\s/g, '');
     
     onSave({
       ...formData,
       id: formData.id || generateId(),
+      phone: fullPhone,
     });
   };
 
@@ -44,13 +76,26 @@ function ContractorForm({
       
       <div>
         <label className="block text-sm text-slate-400 mb-1">Telefon *</label>
-        <input
-          type="tel"
-          value={formData.phone}
-          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-          className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          placeholder="f.eks. 12345678"
-        />
+        <div className="flex gap-2">
+          <select
+            value={countryCode}
+            onChange={(e) => setCountryCode(e.target.value)}
+            className="px-2 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            {countryCodes.map((cc) => (
+              <option key={cc.code} value={cc.code}>{cc.code}</option>
+            ))}
+          </select>
+          <input
+            type="tel"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value.replace(/[^0-9]/g, ''))}
+            className="flex-1 px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="12345678"
+          />
+        </div>
       </div>
       
       <div>
@@ -67,7 +112,7 @@ function ContractorForm({
       <div className="flex gap-3 pt-2">
         <button
           type="submit"
-          disabled={!formData.name || !formData.phone}
+          disabled={!formData.name || !phoneNumber}
           className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {contractor ? 'Oppdater' : 'Legg til'}
@@ -169,7 +214,6 @@ export function ContractorCard() {
   
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const sortedContractors = [...contractors].sort((a, b) => {
     if (a.isPrimary && !b.isPrimary) return -1;
@@ -191,19 +235,15 @@ export function ContractorCard() {
   };
 
   const handleDelete = (id: string) => {
-    setDeletingId(id);
-  };
-
-  const confirmDelete = () => {
-    if (!deletingId) return;
-    const contractor = contractors.find(c => c.id === deletingId);
-    if (contractor?.isPrimary && contractors.length > 1) {
-      const remaining = contractors.filter(c => c.id !== deletingId);
-      remaining[0].isPrimary = true;
-      dispatch({ type: 'SET_CONTRACTOR_PRIMARY', payload: remaining[0].id });
+    if (confirm('Er du sikker på at du vil slette denne kontakten?')) {
+      const contractor = contractors.find(c => c.id === id);
+      if (contractor?.isPrimary && contractors.length > 1) {
+        const remaining = contractors.filter(c => c.id !== id);
+        remaining[0].isPrimary = true;
+        dispatch({ type: 'SET_CONTRACTOR_PRIMARY', payload: remaining[0].id });
+      }
+      dispatch({ type: 'DELETE_CONTRACTOR', payload: id });
     }
-    dispatch({ type: 'DELETE_CONTRACTOR', payload: deletingId });
-    setDeletingId(null);
   };
 
   const handleSetPrimary = (id: string) => {
@@ -216,12 +256,12 @@ export function ContractorCard() {
 
   return (
     <div className="bg-slate-800 rounded-xl shadow-md p-6">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center border-b border-slate-700 pb-3 mb-4">
         <h2 className="text-lg font-semibold text-white">Kontakter</h2>
         {!isAdding && !editingId && (
           <button
             onClick={() => setIsAdding(true)}
-            className="text-sm text-blue-400 hover:text-blue-300"
+            className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700"
           >
             + Legg til
           </button>
@@ -246,28 +286,6 @@ export function ContractorCard() {
             onSave={handleUpdate}
             onCancel={() => setEditingId(null)}
           />
-        </div>
-      )}
-
-      {deletingId && (
-        <div className="mb-4 p-4 bg-red-900/50 border border-red-700 rounded-lg">
-          <p className="text-white mb-3">
-            Er du sikker på at du vil slette denne kontakten?
-          </p>
-          <div className="flex gap-2">
-            <button
-              onClick={confirmDelete}
-              className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-            >
-              Ja, slett
-            </button>
-            <button
-              onClick={() => setDeletingId(null)}
-              className="flex-1 px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-500"
-            >
-              Avbryt
-            </button>
-          </div>
         </div>
       )}
 

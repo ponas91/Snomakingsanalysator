@@ -1,4 +1,5 @@
-import { useApp } from '../context/AppContext';
+import { useApp } from '../hooks/useApp';
+import { getWeatherConditionEmoji, getWeatherConditionLabel } from '../services/metno';
 
 export function WeatherCard() {
   const { state, refreshWeather } = useApp();
@@ -10,16 +11,32 @@ export function WeatherCard() {
     return date.toLocaleTimeString('nb-NO', { hour: '2-digit', minute: '2-digit' });
   };
 
+  const precipIcons = {
+    snow: '❄️',
+    sleet: '🌨️',
+    rain: '🌧️'
+  };
+
+  const precipLabels = {
+    snow: 'Snø (nå)',
+    sleet: 'Sludd (nå)',
+    rain: 'Regn (nå)'
+  };
+
+  const getPrecipLabel = (type: string) => {
+    return precipLabels[type as keyof typeof precipLabels] || 'Regn (nå)';
+  };
+
   const pentUrl = `https://pent.no/${lat},${lon}`;
 
   return (
     <div className="bg-slate-800 rounded-xl shadow-md p-6">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center border-b border-slate-700 pb-3 mb-4">
         <h2 className="text-lg font-semibold text-white">Vær nå</h2>
         <button
           onClick={refreshWeather}
           disabled={loading}
-          className="text-sm text-blue-400 hover:text-blue-300 disabled:opacity-50"
+          className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 disabled:opacity-50"
         >
           {loading ? 'Oppdaterer...' : 'Oppdater'}
         </button>
@@ -39,9 +56,19 @@ export function WeatherCard() {
             <div className="text-xs text-slate-400">Temperatur</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl mb-1">❄️</div>
-            <div className="text-2xl font-bold text-white">{weather.current.snow} cm</div>
-            <div className="text-xs text-slate-400">Snø (24t)</div>
+            {weather.current.precipitation > 0 ? (
+              <>
+                <div className="text-3xl mb-1">{precipIcons[weather.current.precipitationType] || '🌧️'}</div>
+                <div className="text-2xl font-bold text-white">{weather.current.snow.toFixed(1)} mm</div>
+                <div className="text-xs text-slate-400">{getPrecipLabel(weather.current.precipitationType)}</div>
+              </>
+            ) : (
+              <>
+                <div className="text-3xl mb-1">{getWeatherConditionEmoji(weather.current.weatherCondition)}</div>
+                <div className="text-2xl font-bold text-white">{getWeatherConditionLabel(weather.current.weatherCondition)}</div>
+                <div className="text-xs text-slate-400">Vær</div>
+              </>
+            )}
           </div>
           <div className="text-center">
             <div className="text-3xl mb-1">💨</div>
