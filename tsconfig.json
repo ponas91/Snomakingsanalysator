@@ -1,7 +1,23 @@
+/**
+ * TypeScript-konfigurasjon - Hovedfil
+ * 
+ * Denne filen er en "project reference" som peker til de faktiske konfigurasjonene.
+ * 
+ * Fordeler med denne strukturen:
+ * - Separat konfig for app-kode (tsconfig.app.json) og node-kode (tsconfig.node.json)
+ * - Raskere type-sjekking ved å kun kompilere det som trengs
+ * - Bedre IDE-støtte
+ * 
+ * @see https://www.typescriptlang.org/docs/handbook/project-references.html
+ */
+
 {
+  // Ingen filer på rotnivå - alt refereres
   "files": [],
+  
+  // Refererer til underkonfigurasjoner
   "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
+    { "path": "./tsconfig.app.json" },  // For app-kode i src/
+    { "path": "./tsconfig.node.json" }  // For byggeverktøy (Vite, etc.)
   ]
 }

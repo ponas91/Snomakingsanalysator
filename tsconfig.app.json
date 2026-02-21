@@ -1,28 +1,214 @@
+/**
+ * TypeScript-konfigurasjon for app-kode
+ * 
+ * Denne filen definerer TypeScript-kompilierungsregler for kildekoden i src/-mappen.
+ * 
+ * @see https://www.typescriptlang.org/tsconfig - Full dokumentasjon
+ */
+
 {
   "compilerOptions": {
+    /**
+     * Kompileringsinformasjon
+     * 
+     * tsBuildInfoFile: Midlertidig fil for å spore endringer
+     * - Brukes for raskere rebuilds (kun kompilere det som er endret)
+     * - Ligger i node_modules/.tmp/
+     */
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    
+    /**
+     * Target: Hvilken JavaScript-versjon koden kompileres til
+     * 
+     * ES2022 = Moderne JavaScript med:
+     * - Top-level await
+     * - Private class fields
+     * - Array.findLast(), etc.
+     * 
+     * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Language_Resources
+     */
     "target": "ES2022",
+    
+    /**
+     * useDefineForClassFields
+     * 
+     * true = class fields bruker Object.defineProperty i stedet for
+     * get/set metoder. Bedre ytelse og standard atferd.
+     */
     "useDefineForClassFields": true,
+    
+    /**
+     * lib: Biblioteker som er tilgjengelige
+     * 
+     * - ES2022: Moderne JS-funksjoner
+     * - DOM: Browser API (document, window, etc.)
+     * - DOM.Iterable: Iteratorer for DOM-lister
+     */
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    
+    /**
+     * module: Modul-system
+     * 
+     * ESNext = Moderne ES modules (import/export)
+     * Vite håndterer transformasjon til riktig format
+     */
     "module": "ESNext",
+    
+    /**
+     * types: TypeScript-typer som alltid er inkludert
+     * 
+     * vite/client: Type-definisjoner for Vite-spesifikke ting:
+     * - import.meta.env (miljøvariabler)
+     * - Vite-specifikke import-er
+     */
     "types": ["vite/client"],
+    
+    /**
+     * skipLibCheck
+     * 
+     * true = Ikke sjekk type-feil i node_modules
+     * - Gjr kompileringen raskere
+     * - Unngår feil fra tredjeparts-biblioteker
+     */
     "skipLibCheck": true,
-
-    /* Bundler mode */
+    
+    /** =====================
+     * BUNDLER-MODUS
+     * =====================
+     * 
+     * Disse innstillingene er spesielt for Vite og andre moderne bundlere.
+     * De forteller TypeScript at en bundler vil håndtere:
+     * - Module resolution
+     * - Import/Export transformasjoner
+     */
+    
+    /**
+     * moduleResolution: Hvordan moduler løses opp
+     * 
+     * bundler = Lar bundleren (Vite) håndtere import-stier
+     * - Tillater å importere filer uten extensions
+     * - Vite finner riktig fil automatisk
+     */
     "moduleResolution": "bundler",
+    
+    /**
+     * allowImportingTsExtensions
+     * 
+     * true = Tillater å importere .ts/.tsx filer direkte
+     * - Nødvendig for Vite sin HMR
+     * - Kommer ikke i produksjons-bundlet
+     */
     "allowImportingTsExtensions": true,
+    
+    /**
+     * verbatimModuleSyntax
+     * 
+     * true = Krever å bruke 'import { type T }' for kun typer
+     * - Separerer tydelig mellom verdier og typer
+     * - Gjr det lettere for verktøy å fjerne ubrukte typer
+     */
     "verbatimModuleSyntax": true,
+    
+    /**
+     * moduleDetection
+     * 
+     * force = Behandl hver fil som en modul
+     * - Alle filer får sitt eget scope
+     * - Unngår problemer med delte variabler
+     */
     "moduleDetection": "force",
+    
+    /**
+     * noEmit
+     * 
+     * true = Ikke produser JavaScript-filer
+     * - Vite kompilerer og transformerer selv
+     * - Dette er kun for type-sjekking
+     */
     "noEmit": true,
+    
+    /**
+     * jsx: Hvordan JSX håndteres
+     * 
+     * react-jsx = Automatisk import av React (for React 17+)
+     * - Ikke nødvendig å skrive 'import React from "react"'
+     * - React sin nye JSX transform
+     */
     "jsx": "react-jsx",
-
-    /* Linting */
+    
+    /** =====================
+     * LINTING
+     * =====================
+     * 
+     * Strenge regler for bedre kodekvalitet
+     */
+    
+    /**
+     * strict
+     * 
+     * true = Aktiverer alle strenge type-sjekkingsregler
+     * - null/undefined sjekking
+     * - Implict any
+     * - this-typer
+     * 
+     * Anbefales alltid! Fanger mange feil.
+     */
     "strict": true,
+    
+    /**
+     * noUnusedLocals
+     * 
+     * true = Feil hvis en variabel er deklarert men ikke brukt
+     * - Fanger opp glemte variabler
+     * - Holder koden ren
+     */
     "noUnusedLocals": true,
+    
+    /**
+     * noUnusedParameters
+     * 
+     * true = Feil hvis en parameter ikke brukes i en funksjon
+     * - Unngår ubrukte argumenter
+     * - Bruk _ istedenfor hvis parameteren er nødvendig (f.eks. _id)
+     */
     "noUnusedParameters": true,
+    
+    /**
+     * erasableSyntaxOnly
+     * 
+     * true = Kun tillater syntax som kan "viskes bort" i produksjon
+     * - const, let (ikke var)
+     * - readonly (ikke const asserter)
+     * - Type alias (ikke interfaces med implement)
+     * 
+     * Passer bra med verbatimModuleSyntax
+     */
     "erasableSyntaxOnly": true,
+    
+    /**
+     * noFallthroughCasesInSwitch
+     * 
+     * true = Feil hvis en switch-case ikke har break/return
+     * - Forhindrer utilsiktet fall-through
+     * - Må alltid ha break, return, eller throw
+     */
     "noFallthroughCasesInSwitch": true,
+    
+    /**
+     * noUncheckedSideEffectImports
+     * 
+     * true = Feil hvis en import har side effects som ikke brukes
+     * - Fanger opp ubrukte CSS-importer
+     * - etc.
+     */
     "noUncheckedSideEffectImports": true
   },
+  
+  /**
+   * include: Hvilke filer som skal inkluderes
+   * 
+   * src/ = Alt i src-mappen kompileres
+   * Alle .ts, .tsx, .js, .jsx filer inkluderes automatisk
+   */
   "include": ["src"]
 }
