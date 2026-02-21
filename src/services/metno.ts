@@ -11,6 +11,7 @@
  */
 
 import type { MetNoResponse, WeatherData, HourlyForecast, PrecipitationType } from '../types';
+import { isValidCoordinate } from '../lib/validation';
 
 // =============================================================================
 // KONSTANTER
@@ -165,6 +166,11 @@ function getPrecipitationType(temp: number, precip: number): PrecipitationType {
  * console.log(vær.current.temperature); // -2.5
  */
 export async function fetchWeatherData(lat: number, lon: number): Promise<WeatherData> {
+  // Validér koordinater
+  if (!isValidCoordinate(lat, lon)) {
+    throw new Error('Ugyldige koordinater');
+  }
+  
   // Bygg URL med koordinater
   const url = `${BASE_URL}?lat=${lat}&lon=${lon}`;
   

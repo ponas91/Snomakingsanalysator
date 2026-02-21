@@ -39,6 +39,41 @@ interface NominatimPlace {
 const NOMINATIM_BASE_URL = 'https://nominatim.openstreetmap.org/search';
 
 // =============================================================================
+// VALIDERING
+// =============================================================================
+
+/**
+ * isValidLatitude: Sjekk om breddegrad er gyldig
+ * 
+ * @param lat - Breddegrad (-90 til 90)
+ * @returns true hvis gyldig
+ */
+function isValidLatitude(lat: number): boolean {
+  return typeof lat === 'number' && !isNaN(lat) && lat >= -90 && lat <= 90;
+}
+
+/**
+ * isValidLongitude: Sjekk om lengdegrad er gyldig
+ * 
+ * @param lon - Lengdegrad (-180 til 180)
+ * @returns true hvis gyldig
+ */
+function isValidLongitude(lon: number): boolean {
+  return typeof lon === 'number' && !isNaN(lon) && lon >= -180 && lon <= 180;
+}
+
+/**
+ * isValidCoordinate: Sjekk om koordinater er gyldige
+ * 
+ * @param lat - Breddegrad
+ * @param lon - Lengdegrad
+ * @returns true hvis begge er gyldige
+ */
+export function isValidCoordinate(lat: number, lon: number): boolean {
+  return isValidLatitude(lat) && isValidLongitude(lon);
+}
+
+// =============================================================================
 // FUNKSJONER
 // =============================================================================
 
@@ -120,6 +155,11 @@ export async function searchPlaces(query: string): Promise<GeocodingResult[]> {
  * // "Oslo, Norge"
  */
 export async function reverseGeocode(lat: number, lon: number): Promise<string | null> {
+  // Validér koordinater før API-kall
+  if (!isValidCoordinate(lat, lon)) {
+    return null;
+  }
+  
   const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
   
   try {

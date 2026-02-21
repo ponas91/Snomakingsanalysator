@@ -16,6 +16,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Snømåker" />
     
+    <!-- Content Security Policy - beskytter mot XSS og data injection -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://api.met.no https://nominatim.openstreetmap.org; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self';">
+    
     <link rel="manifest" href="/manifest.webmanifest" />
     <title>Snømåkingsanalysator</title>
   </head>
