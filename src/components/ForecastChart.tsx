@@ -38,7 +38,7 @@ export function ForecastChart() {
       <h2 className="text-lg font-semibold text-white border-b border-slate-700 pb-3 mb-4">Snøprognose (24 timer)</h2>
       
       <div className="h-48 w-full">
-        <ResponsiveContainer width="100%" height={192}>
+        <ResponsiveContainer width="100%" height={192} key={weather.updatedAt}>
           <BarChart data={chartData} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
             <XAxis 
               dataKey="time" 
