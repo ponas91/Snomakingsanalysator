@@ -56,6 +56,7 @@ export function ForecastChart() {
                 borderRadius: '8px',
                 fontSize: '12px',
                 color: '#f1f5f9',
+                whiteSpace: 'pre-line',
               }}
               formatter={(value, name, props) => {
                 if (name === 'snow') {
@@ -67,7 +68,7 @@ export function ForecastChart() {
                     ? 'Nedbør'
                     : getWeatherConditionLabel(props.payload.weatherCondition);
                   return [
-                    `${icon} ${Number(value).toFixed(1)} mm\n🌡️ ${props.payload.temperature}°C`,
+                    `${icon} ${Number(value).toFixed(1)} mm` + '\n' + `🌡️ ${props.payload.temperature}°C`,
                     label
                   ];
                 }
