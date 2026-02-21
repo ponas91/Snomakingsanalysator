@@ -114,16 +114,19 @@ This project uses Tailwind CSS v4 with `@tailwindcss/vite` plugin.
 - Uses Met.no API (Meteorologisk institutt)
 - Service: `src/services/metno.ts`
 - Functions: `fetchWeatherData(lat, lon)`, `calculateSnowInPeriod()`
+- Includes coordinate validation before API calls
 
 ### Geocoding
 - Uses OpenStreetMap Nominatim API
 - Service: `src/services/geocoding.ts`
 - Function: `searchPlaces(query)`
+- Includes coordinate validation and `isValidCoordinate()` export
 
 ### Notifications
 - Uses Browser Notifications API
 - Service: `src/services/notifications.ts`
-- Functions: `requestNotificationPermission()`, `showNotification()`
+- Functions: `requestNotificationPermission()`, `showNotification()`, `isDayTime()`, `isNightTime()`
+- Always wrap Notification constructor in try-catch to prevent crashes on unsupported browsers
 
 ---
 

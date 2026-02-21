@@ -190,6 +190,27 @@ const results = await searchPlaces("Oslo");
 // [{ name: "Oslo", lat: 59.91, lon: 10.75, display_name: "..." }]
 ```
 
+### Varslinger
+
+```typescript
+import { requestNotificationPermission, showNotification, isDayTime, isNightTime } from './services/notifications';
+
+// Be om tillatelse
+const granted = await requestNotificationPermission();
+
+// Send varsling (wrap alltid i try-catch)
+try {
+  showNotification('Tittel', 'Melding');
+} catch (e) {
+  console.log('Varsling støttes ikke');
+}
+
+// Sjekk tid på døgnet
+if (isNightTime()) {
+  // Vis måne-emoji i stedet for sol
+}
+```
+
 ---
 
 # 5. LEGGE TIL NY FUNKSJON
@@ -334,6 +355,20 @@ Kjør `npm run build` for å se alle TypeScript-feil. Ofte løst med:
 - Riktig import: `import { type T } from '...'` for kun typer
 - Unngå `any` - bruk `unknown` om nødvendig
 
+## Validering
+
+Alle koordinater valideres før API-kall:
+
+```typescript
+import { isValidCoordinate } from './services/geocoding';
+
+if (isValidCoordinate(lat, lon)) {
+  // Gjør API-kall
+}
+```
+
+Bruk funksjoner fra `src/lib/validation.ts` for input-sjekk.
+
 ## PWA-installasjon fungerer ikke på iOS
 
 Sjekk at `index.html` har:
@@ -343,6 +378,10 @@ Sjekk at `index.html` har:
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <link rel="apple-touch-icon" href="/pwa-192x192.svg" />
 ```
+
+## Sikkerhet
+
+`index.html` inneholder Content Security Policy (CSP) for å beskytte mot XSS.
 
 ---
 
