@@ -101,16 +101,16 @@ function AppContent() {
        * - Viser app-tittel og lokasjon
        * - Inneholder link til Met.no
        */}
-      <header className="bg-slate-800 shadow-md sticky top-0 z-10">
+      <header className="bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800 shadow-md sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-4">
           {/* App-tittel */}
-          <h1 className="text-xl font-bold text-white">❄️ Snømåkingsanalysator</h1>
+          <h1 className="text-2xl font-extrabold text-white">❄️ Snømåkingsanalysator</h1>
           
           {/* Lokasjon */}
           <div className="flex items-center gap-2 mt-1">
             <span className="text-blue-400">📍</span>
             {/* Hent lokasjon fra global state */}
-            <span className="text-lg font-medium text-blue-300">{state.settings.location.name}</span>
+            <span className="text-sm font-medium text-slate-400">{state.settings.location.name}</span>
           </div>
           
           {/* Kreditering til Met.no */}
