@@ -69,7 +69,7 @@ export function ForecastChart() {
                     : getWeatherConditionLabel(props.payload.weatherCondition);
                   return [
                     `${label}` + '\n' + `${icon} ${Number(value).toFixed(1)} mm` + '\n' + `🌡️ ${props.payload.temperature}°C`,
-                    ''
+                    undefined
                   ];
                 }
                 return [value, name];
