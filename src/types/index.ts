@@ -21,9 +21,11 @@ export interface SnowEntry {
 }
 
 export interface Contractor {
+  id: string;
   name: string;
   phone: string;
   email?: string;
+  isPrimary?: boolean;
 }
 
 export interface HourlyForecast {
@@ -81,7 +83,7 @@ export interface AppState {
   settings: Settings;
   weather: WeatherData | null;
   history: SnowEntry[];
-  contractor: Contractor | null;
+  contractors: Contractor[];
   loading: boolean;
   error: string | null;
 }
@@ -92,6 +94,10 @@ export type AppAction =
   | { type: 'SET_HISTORY'; payload: SnowEntry[] }
   | { type: 'ADD_HISTORY'; payload: SnowEntry }
   | { type: 'DELETE_HISTORY'; payload: string }
-  | { type: 'SET_CONTRACTOR'; payload: Contractor | null }
+  | { type: 'SET_CONTRACTORS'; payload: Contractor[] }
+  | { type: 'ADD_CONTRACTOR'; payload: Contractor }
+  | { type: 'UPDATE_CONTRACTOR'; payload: Contractor }
+  | { type: 'DELETE_CONTRACTOR'; payload: string }
+  | { type: 'SET_CONTRACTOR_PRIMARY'; payload: string }
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'SET_ERROR'; payload: string | null };

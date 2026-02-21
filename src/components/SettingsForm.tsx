@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useApp } from '../context/AppContext';
 import type { Settings } from '../types';
+import { searchPlaces, type GeocodingResult } from '../services/geocoding';
 
 export function SettingsForm() {
   const { state, dispatch, refreshWeather } = useApp();
@@ -9,6 +10,13 @@ export function SettingsForm() {
   const [deferredPrompt, setDeferredPrompt] = useState<Event | null>(null);
   const [isInstallable, setIsInstallable] = useState(false);
 
+  const [searchQuery, setSearchQuery] = useState(state.settings.location.name);
+  const [suggestions, setSuggestions] = useState<GeocodingResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchTimeoutRef = useRef<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const handler = (e: Event) => {
       e.preventDefault();
@@ -16,7 +24,18 @@ export function SettingsForm() {
       setIsInstallable(true);
     };
     window.addEventListener('beforeinstallprompt', handler);
-    return () => window.removeEventListener('beforeinstallprompt', handler);
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   const handleInstall = async () => {
@@ -42,6 +61,45 @@ export function SettingsForm() {
     setSaved(false);
   };
 
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    handleLocationChange('name', value);
+
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    if (value.trim().length < 2) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    setShowSuggestions(true);
+    setIsSearching(true);
+
+    searchTimeoutRef.current = window.setTimeout(async () => {
+      const results = await searchPlaces(value);
+      setSuggestions(results);
+      setIsSearching(false);
+    }, 300);
+  };
+
+  const handleSelectSuggestion = (suggestion: GeocodingResult) => {
+    setSearchQuery(suggestion.name);
+    setFormData((prev) => ({
+      ...prev,
+      location: {
+        name: suggestion.name,
+        lat: suggestion.lat,
+        lon: suggestion.lon,
+      },
+    }));
+    setSuggestions([]);
+    setShowSuggestions(false);
+    setSaved(false);
+  };
+
   const handleSave = () => {
     dispatch({ type: 'SET_SETTINGS', payload: formData });
     refreshWeather();
@@ -56,15 +114,46 @@ export function SettingsForm() {
       <div className="space-y-6">
         <div>
           <h3 className="font-medium text-slate-300 mb-3">Lokasjon</h3>
-          <div className="space-y-3">
+          <div className="space-y-3" ref={containerRef}>
             <div>
               <label className="block text-sm text-slate-400 mb-1">Sted</label>
-              <input
-                type="text"
-                value={formData.location.name}
-                onChange={(e) => handleLocationChange('name', e.target.value)}
-                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => handleSearchChange(e.target.value)}
+                  onFocus={() => searchQuery.length >= 2 && setShowSuggestions(true)}
+                  placeholder="Søk etter et sted..."
+                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  autoComplete="off"
+                />
+                {isSearching && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                  </div>
+                )}
+                {showSuggestions && suggestions.length > 0 && (
+                  <div className="absolute z-10 w-full mt-1 bg-slate-700 border border-slate-600 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    {suggestions.map((suggestion, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleSelectSuggestion(suggestion)}
+                        className="w-full px-3 py-2 text-left text-sm text-slate-200 hover:bg-slate-600 transition-colors first:rounded-t-lg last:rounded-b-lg"
+                      >
+                        <div className="font-medium">{suggestion.name}</div>
+                        <div className="text-xs text-slate-400 truncate">
+                          {suggestion.display_name}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {showSuggestions && !isSearching && suggestions.length === 0 && searchQuery.length >= 2 && (
+                  <div className="absolute z-10 w-full mt-1 bg-slate-700 border border-slate-600 rounded-lg shadow-lg p-3 text-sm text-slate-400">
+                    Ingen steder funnet
+                  </div>
+                )}
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
@@ -89,7 +178,7 @@ export function SettingsForm() {
               </div>
             </div>
             <p className="text-xs text-slate-500">
-              Tips: Søk på Google Maps, høyreklikk på stedet og kopier koordinatene.
+              Velg et sted fra listen, eller skriv inn koordinater manuelt.
             </p>
           </div>
         </div>

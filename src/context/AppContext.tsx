@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 import type { AppState, AppAction, Settings, SnowEntry, Contractor } from '../types';
 import { fetchWeatherData, calculateSnowInPeriod } from '../services/metno';
@@ -7,7 +7,7 @@ import { getFromLocalStorage, setToLocalStorage } from '../hooks/useLocalStorage
 const STORAGE_KEYS = {
   SETTINGS: 'snomaking_settings',
   HISTORY: 'snomaking_history',
-  CONTRACTOR: 'snomaking_contractor',
+  CONTRACTORS: 'snomaking_contractors',
 };
 
 const DEFAULT_SETTINGS: Settings = {
@@ -32,7 +32,7 @@ const initialState: AppState = {
   settings: DEFAULT_SETTINGS,
   weather: null,
   history: [],
-  contractor: null,
+  contractors: [],
   loading: false,
   error: null,
 };
@@ -57,9 +57,34 @@ function appReducer(state: AppState, action: AppAction): AppState {
       setToLocalStorage(STORAGE_KEYS.HISTORY, newHistory);
       return { ...state, history: newHistory };
     }
-    case 'SET_CONTRACTOR':
-      setToLocalStorage(STORAGE_KEYS.CONTRACTOR, action.payload);
-      return { ...state, contractor: action.payload };
+    case 'SET_CONTRACTORS':
+      setToLocalStorage(STORAGE_KEYS.CONTRACTORS, action.payload);
+      return { ...state, contractors: action.payload };
+    case 'ADD_CONTRACTOR': {
+      const newContractors = [...state.contractors, action.payload];
+      setToLocalStorage(STORAGE_KEYS.CONTRACTORS, newContractors);
+      return { ...state, contractors: newContractors };
+    }
+    case 'UPDATE_CONTRACTOR': {
+      const newContractors = state.contractors.map(c =>
+        c.id === action.payload.id ? action.payload : c
+      );
+      setToLocalStorage(STORAGE_KEYS.CONTRACTORS, newContractors);
+      return { ...state, contractors: newContractors };
+    }
+    case 'DELETE_CONTRACTOR': {
+      const newContractors = state.contractors.filter(c => c.id !== action.payload);
+      setToLocalStorage(STORAGE_KEYS.CONTRACTORS, newContractors);
+      return { ...state, contractors: newContractors };
+    }
+    case 'SET_CONTRACTOR_PRIMARY': {
+      const newContractors = state.contractors.map(c => ({
+        ...c,
+        isPrimary: c.id === action.payload,
+      }));
+      setToLocalStorage(STORAGE_KEYS.CONTRACTORS, newContractors);
+      return { ...state, contractors: newContractors };
+    }
     case 'SET_LOADING':
       return { ...state, loading: action.payload };
     case 'SET_ERROR':
@@ -81,6 +106,12 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export function AppProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
 
+  const locationRef = useRef(state.settings.location);
+
+  useEffect(() => {
+    locationRef.current = state.settings.location;
+  }, [state.settings.location]);
+
   useEffect(() => {
     const savedSettings = getFromLocalStorage(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
     dispatch({ type: 'SET_SETTINGS', payload: savedSettings });
@@ -88,8 +119,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const savedHistory = getFromLocalStorage<SnowEntry[]>(STORAGE_KEYS.HISTORY, []);
     dispatch({ type: 'SET_HISTORY', payload: cleanOldHistory(savedHistory) });
 
-    const savedContractor = getFromLocalStorage<Contractor | null>(STORAGE_KEYS.CONTRACTOR, null);
-    dispatch({ type: 'SET_CONTRACTOR', payload: savedContractor });
+    const savedContractors = getFromLocalStorage<Contractor[]>(STORAGE_KEYS.CONTRACTORS, []);
+    dispatch({ type: 'SET_CONTRACTORS', payload: savedContractors });
   }, []);
 
   const refreshWeather = async () => {
@@ -97,7 +128,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'SET_ERROR', payload: null });
 
     try {
-      const weather = await fetchWeatherData(state.settings.location.lat, state.settings.location.lon);
+      const weather = await fetchWeatherData(locationRef.current.lat, locationRef.current.lon);
       dispatch({ type: 'SET_WEATHER', payload: weather });
     } catch (error) {
       dispatch({ type: 'SET_ERROR', payload: error instanceof Error ? error.message : 'Ukjent feil' });
@@ -110,6 +141,25 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (state.settings.location.lat && state.settings.location.lon) {
       refreshWeather();
     }
+  }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      refreshWeather();
+    }, 15 * 60 * 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        refreshWeather();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
 
   const getSnowStatus = () => {
