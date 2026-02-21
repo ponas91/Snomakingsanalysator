@@ -101,10 +101,10 @@ This project uses Tailwind CSS v4 with `@tailwindcss/vite` plugin.
 - Use responsive prefixes: `md:`, `lg:` (minimal usage - mobile-first)
 - Custom animations in `index.css` if needed
 
-### Colors (Slate palette)
-- Background: `bg-slate-900` (dark), `bg-slate-800` (cards)
-- Text: `text-white` (primary), `text-slate-300` (secondary), `text-slate-500` (muted)
-- Accents: `blue-600` (primary), `green-600`, `red-600`, `yellow-600`
+### Colors (High-contrast Slate + Sky Blue theme)
+- Background: `bg-slate-950` (main), `bg-slate-900` (cards), `bg-slate-800` (inputs)
+- Text: `text-white` (primary), `text-slate-200/300` (secondary), `text-slate-400` (muted)
+- Accents: `sky-500/sky-600` (primary), `green-500`, `red-500`, `yellow-500` (status)
 
 ---
 
