@@ -18,6 +18,7 @@
 import { useState } from 'react';
 import { AppProvider } from './context/AppContext';
 import { useApp } from './hooks/useApp';
+import { VERSION, BUILD_DATE } from './lib/version';
 import { WeatherCard } from './components/WeatherCard';
 import { ForecastChart } from './components/ForecastChart';
 import { SnowStatusCard } from './components/SnowStatusCard';
@@ -189,7 +190,7 @@ function AppContent() {
           rel="noopener noreferrer"
           className="text-xs text-slate-600 hover:text-slate-400 transition-colors"
         >
-          Utviklet av Duvsethe IT
+          v{VERSION} ({BUILD_DATE}) | Utviklet av Duvsethe IT
         </a>
       </footer>
     </div>
