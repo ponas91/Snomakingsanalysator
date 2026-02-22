@@ -1,5 +1,5 @@
 /**
- * Main entry point for Snømåkingsanalysator
+ * Main entry point for Snøklar
  * 
  * Denne filen er startpunktet for React-applikasjonen.
  * Den:

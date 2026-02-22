@@ -1,5 +1,5 @@
 /**
- * AppContext: Global state management for Snømåkingsanalysator
+ * AppContext: Global state management for Snøklar
  * 
  * Denne filen håndterer all global tilstand i appen:
  * - Innstillinger (location, notifications, etc.)

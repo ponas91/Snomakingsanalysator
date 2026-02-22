@@ -1,5 +1,5 @@
 /**
- * Vite-konfigurasjon for Snømåkingsanalysator
+ * Vite-konfigurasjon for Snøklar
  * 
  * Vite er en moderne byggeverktøy for frontend-prosjekter.
  * Den erstatter Webpack og har innebygd støtte for:

@@ -1,5 +1,5 @@
 /**
- * TypeScript-type-definisjoner for Snømåkingsanalysator
+ * TypeScript-type-definisjoner for Snøklar
  * 
  * Denne filen inneholder alle TypeScript-interfaces og typer
  * som brukes i applikasjonen.

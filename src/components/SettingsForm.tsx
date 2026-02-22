@@ -306,7 +306,7 @@ export function SettingsForm() {
             Fant du en feil eller har forslag til forbedringer? Send en e-post til oss.
           </p>
           <a
-            href="mailto:jonas.duvsethe91@gmail.com?subject=Snømåkingsanalysator - Tilbakemelding"
+            href="mailto:jonas.duvsethe91@gmail.com?subject=Snøklar - Tilbakemelding"
             className="block w-full px-4 py-2 bg-slate-700 text-white text-center rounded-lg hover:bg-slate-600 transition-colors"
           >
             ✉️ Send tilbakemelding

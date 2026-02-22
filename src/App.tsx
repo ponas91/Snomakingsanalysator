@@ -1,5 +1,5 @@
 /**
- * Hovedapplikasjonen for Snømåkingsanalysator
+ * Hovedapplikasjonen for Snøklar
  * 
  * Denne filen inneholder:
  * - App(): Root-komponent som setter opp provider
@@ -98,7 +98,7 @@ function AppContent() {
       <header className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 shadow-md z-10">
         <div className="max-w-2xl mx-auto px-4 py-4">
           {/* App-tittel */}
-          <h1 className="text-2xl font-extrabold text-white">❄️ Snømåkingsanalysator</h1>
+          <h1 className="text-2xl font-extrabold text-white">❄️ Snøklar</h1>
           
           {/* Kreditering til Met.no */}
           <a 
