@@ -62,10 +62,10 @@ export default defineConfig({
        */
       manifest: {
         // Fullt navn - vises i app-lanseringen
-        name: 'Snømåkingsanalysator',
+        name: 'Snøklar',
         
         // Kort navn - vises under app-ikonet på hjemmeskjermen
-        short_name: 'Snømåker',
+        short_name: 'Snøklar',
         
         // Beskrivelse av appen
         description: 'Følg med på snøvarsling og bestill brøyting',

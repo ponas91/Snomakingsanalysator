@@ -113,7 +113,7 @@ export async function searchPlaces(query: string): Promise<GeocodingResult[]> {
      */
     const response = await fetch(`${NOMINATIM_BASE_URL}?${params}`, {
       headers: {
-        'User-Agent': 'Snomåkingsanalysator/1.0',
+        'User-Agent': 'Snoklar/1.0',
         'Accept-Language': 'no,en',
       },
     });
@@ -165,7 +165,7 @@ export async function reverseGeocode(lat: number, lon: number): Promise<string |
   try {
     const response = await fetch(url, {
       headers: {
-        'User-Agent': 'Snomåkingsanalysator/1.0',
+        'User-Agent': 'Snoklar/1.0',
       },
     });
     

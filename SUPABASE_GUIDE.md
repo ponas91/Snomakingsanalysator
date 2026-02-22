@@ -1,4 +1,4 @@
-# Supabase-oppsett for Snømåkingsanalysator
+# Supabase-oppsett for Snøklar
 
 Denne guiden beskriver hvordan du setter opp Supabase som backend for appen.
 
@@ -9,7 +9,7 @@ Denne guiden beskriver hvordan du setter opp Supabase som backend for appen.
 1. Gå til [supabase.com](https://supabase.com) og opprett konto
 2. Klikk "New project"
 3. Fyll inn:
-   - **Name**: Snømåkingsanalysator
+   - **Name**: Snøklar
    - **Database password**: Velg et sterkt passord
    - **Region**: Velg nærmeste (f.eks. Stockholm)
 4. Vent på at prosjektet opprettes (~2 minutter)
@@ -81,7 +81,7 @@ For å legge til ekte autentisering senere, se Supabase Auth-dokumentasjon.
 
 ```
 ┌─────────────────────────────────────────────────┐
-│                 Snømåkingsanalysator           │
+│                 Snøklar           │
 │                   (Frontend)                   │
 ├─────────────────────────────────────────────────┤
 │  src/lib/                                       │

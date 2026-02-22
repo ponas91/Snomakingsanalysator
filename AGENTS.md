@@ -1,4 +1,4 @@
-# AGENTS.md - Developer Guide for Snømåkingsanalysator
+# AGENTS.md - Developer Guide for Snøklar
 
 This file provides guidelines for AI agents working on this codebase.
 

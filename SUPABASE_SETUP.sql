@@ -1,5 +1,5 @@
 -- =====================================================
--- Supabase Database Setup for Snømåkingsanalysator
+-- Supabase Database Setup for Snøklar
 -- Kjør denne filen i Supabase SQL Editor
 -- =====================================================
 

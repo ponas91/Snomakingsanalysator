@@ -1,4 +1,4 @@
-# Snømåkingsanalysator
+# Snøklar
 
 En web-applikasjon for å overvåke snøvarsling og koordinere brøyting med entreprenør.
 

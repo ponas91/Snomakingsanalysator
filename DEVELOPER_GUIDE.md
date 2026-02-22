@@ -1,6 +1,6 @@
 # DEVELOPER_GUIDE.md
 
-## En komplett guide for utviklere som skal jobbe med Snømåkingsanalysator
+## En komplett guide for utviklere som skal jobbe med Snøklar
 
 ---
 
@@ -8,7 +8,7 @@
 
 ## Hva appen gjør
 
-Snømåkingsanalysator er en Progressive Web App (PWA) for:
+Snøklar er en Progressive Web App (PWA) for:
 - **Værvarsling**: Henter data fra Meteorologisk institutt (Met.no)
 - **Snøprognose**: Viser 48-timers time-forvarsling
 - **Brøytingslogg**: Logger når det er brøytet
@@ -34,8 +34,8 @@ Snømåkingsanalysator er en Progressive Web App (PWA) for:
 
 ```bash
 # Klon prosjektet
-git clone https://github.com/ponas91/Snomakingsanalysator.git
-cd Snomakingsanalysator
+git clone https://github.com/ponas91/Snoklar.git
+cd Snoklar
 
 # Installer avhengigheter
 npm install
@@ -294,8 +294,8 @@ I `vite.config.ts`:
 VitePWA({
   registerType: 'autoUpdate',  // Auto-oppdatering
   manifest: {
-    name: 'Snømåkingsanalysator',
-    short_name: 'Snømåker',
+name: 'Snøklar',
+short_name: 'Snøklar',
     display: 'standalone',  // Kjør uten nettleser-grensesnitt
     icons: [/* ikonstørrelser */]
   }

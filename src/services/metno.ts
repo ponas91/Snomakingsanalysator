@@ -183,7 +183,7 @@ export async function fetchWeatherData(lat: number, lon: number): Promise<Weathe
   const response = await fetch(url, {
     headers: {
       // Identifiser appen vår (endre e-post til din)
-      'User-Agent': 'Snomåkingsanalysator/1.0 (kontakt@example.com)',
+      'User-Agent': 'Snoklar/1.0 (kontakt@example.com)',
       'Accept': 'application/json',
     },
   });
